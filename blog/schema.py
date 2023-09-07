@@ -6,25 +6,29 @@ from typing import List
 # how fucking doing that shit
 
 
-class User(BaseModel):
+class UserSchema(BaseModel):
     username: str
     email: EmailStr
-    uuid: UUID
+    id: UUID
 
 
-class Post(BaseModel):
-    user_id: UUID
-    post_id: UUID
+class PostSchema(BaseModel):
+    id: UUID
+    author: UserSchema
     title: str
     description: str
     created: datetime
     updated: datetime
-    who_likes: List[UUID]
 
 
-class Comment(BaseModel):
-    user_id: UUID
-    post_id: UUID
+class PostLikesSchema(BaseModel):
+    post: PostSchema
+    who_likes: List[UserSchema]
+
+
+class CommentSchema(BaseModel):
+    user_id: UserSchema
+    post_id: PostSchema
     description: str
     created: datetime
     updated: datetime
