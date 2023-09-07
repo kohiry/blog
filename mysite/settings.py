@@ -25,8 +25,7 @@ SECRET_KEY = "django-insecure-$6gnafrr+jbk00g-lx3=uu&po_snq@@8rl6e-#bh-t&+9u&ins
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ["0.0.0.0"]
-
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
 # Application definition
 
@@ -37,6 +36,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "blog.apps.BlogConfig",  # Добавляем наше приложение из "Шаг 5"
+    "django.contrib.postgres",
 ]
 
 MIDDLEWARE = [
@@ -72,13 +73,21 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+# print("AAAAAAAAAAAAAAAAAAAAAAAAA", os.getenv("PASSWORD"))
 
 DATABASES = {
     "default": {
-        "NAME": "user_data",
+        # "NAME": os.getenv("DB"),
+        "NAME": "root5",
         "ENGINE": "django.db.backends.postgresql",
-        "USER": os.getenv("USER"),
-        "PASSWORD": os.getenv("PASSWORD"),
+        "USER": "root5",
+        "PASSWORD": "root5",
+        "HOST": "localhost",
+        "PORT": "5432",
+        # "USER": os.getenv("USER"),
+        # "PASSWORD": os.getenv("PASSWORD"),
+        # "HOST": os.getenv("HOST"),
+        # "PORT": os.getenv("PORT"),
     }
 }
 
@@ -112,7 +121,7 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
+#
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
