@@ -1,6 +1,7 @@
 # Блог на Django
 
 Этот тестовый блог написан на:
+
     - Django
     - Docker
     - Postgres
