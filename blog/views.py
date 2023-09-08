@@ -7,7 +7,7 @@ from django.views import generic
 
 class BlogView(generic.ListView):
     model = models.PostModel
-    template_name = "blog/blog.html"
+    template_name = "blog/index.html"
     context_object_name = "posts"
     paginate_by = 5
 
