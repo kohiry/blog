@@ -2,9 +2,9 @@
 
 Этот тестовый блог написан на:
 
-    - Django
-    - Docker
-    - Postgres
+- Django
+- Docker
+- Postgres
 
 Для развертывания блога используется Docker и Postgres.
 
