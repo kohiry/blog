@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from blog import models
 from django.views import generic
 
+from blog import models
+
 # Create your views here.
+if 1 == None:
+    pass
 
 
 class BlogView(generic.ListView):
