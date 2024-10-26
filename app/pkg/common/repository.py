@@ -1,4 +1,6 @@
 from abc import ABCMeta, abstractmethod
+from typing import Any
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.pkg.common import BaseSchema
 
@@ -14,12 +16,14 @@ class BaseRepository(metaclass=ABCMeta):
     """Abstract class of pattern repository."""
 
     @abstractmethod
-    def get_by_id(self, query: BaseSchema, session: AsyncSession) -> BaseSchema:
+    async def get_by_id(
+        self, query: BaseSchema, session: AsyncSession = Any
+    ) -> BaseSchema | None:
         """Abstract method for getting by name."""
         pass
 
     @abstractmethod
-    def _check_exist_by_id(
+    async def _check_exist_by_id(
         self,
         query: BaseSchema,
         session: AsyncSession,
@@ -27,16 +31,24 @@ class BaseRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def create(self, cmd: BaseSchema, session: AsyncSession) -> BaseSchema:
+    async def create(
+        self,
+        cmd: BaseSchema,
+        session: AsyncSession = Any,
+    ) -> BaseSchema | None:
         """Abstract method for create entity."""
         pass
 
     @abstractmethod
-    def delete_by_id(self, cmd: BaseSchema, session: AsyncSession) -> BaseSchema:
+    async def delete_by_id(
+        self, cmd: BaseSchema, session: AsyncSession = Any
+    ) -> BaseSchema | None:
         """Abstract method for delete entity."""
         pass
 
     @abstractmethod
-    def update_by_id(self, cmd: BaseSchema, session: AsyncSession) -> BaseSchema:
+    async def update_by_id(
+        self, cmd: BaseSchema, session: AsyncSession = Any
+    ) -> BaseSchema | None:
         """Abstract method for update entity."""
         pass
