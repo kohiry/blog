@@ -7,7 +7,7 @@ services:
       - .:/api
     depends_on:
       - postgres
-#    command: sh -c "python3 -B -m app.main"
+    command: sh -c "python3 -B -m app.main"
     ports:
       - "${API_PORT}:${API_PORT}"
 
