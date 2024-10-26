@@ -1,8 +1,11 @@
 FROM python:3.12-alpine
 
 WORKDIR /api
-COPY requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+
+COPY poetry/ ./
+
+RUN pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install --no-interaction --no-ansi
 
 COPY . .
