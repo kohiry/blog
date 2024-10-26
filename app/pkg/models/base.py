@@ -1,7 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base
 
 __all__ = [
-    "BaseModel",
+    "BaseORM",
 ]
 
-BaseModel = declarative_base()  # TODO like pydantic
+BaseORM = declarative_base()  # TODO like pydantic

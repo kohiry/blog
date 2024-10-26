@@ -1,38 +1,41 @@
-from app.pkg.common import BaseSchema
+from datetime import datetime
+from pydantic import BaseModel
 
 __all__ = [
     "BlogSchema",
-    "GetBlogByNameSchema",
     "CreateBlogSchema",
     "UpdateBlogSchema",
-    "DeleteBlogByNameSchema",
     "BaseBlogSchema",
+    "GetBlogByIDSchema",
+    "DeleteBlogByIDSchema",
 ]
 
 
-class BaseBlogSchema(BaseSchema):
+# Base schema for shared properties, if any are added in the future
+class BaseBlogSchema(BaseModel):
     pass
 
 
-class GetBlogByNameSchema(BaseBlogSchema):
-    name: str
+class GetBlogByIDSchema(BaseBlogSchema):
+    id: int  # Assuming `id` is an integer in the model
 
 
-class CreateBlogSchema(BaseBlogSchema):
-    name: str
-    author: str
+class CreateBlogSchema(GetBlogByIDSchema):
+    title: str
+    content: str
 
 
-class UpdateBlogSchema(BaseBlogSchema):
-    old_name: str
-    name: str
-    author: str
+class UpdateBlogSchema(GetBlogByIDSchema):
+    title: str
+    content: str
 
 
-class DeleteBlogByNameSchema(BaseBlogSchema):
-    name: str
+class DeleteBlogByIDSchema(GetBlogByIDSchema):
+    pass
 
 
-class BlogSchema(BaseBlogSchema):
-    name: str
-    author: str
+class BlogSchema(GetBlogByIDSchema):
+    title: str
+    content: str
+    created_at: datetime
+    updated_at: datetime

@@ -1,19 +1,21 @@
-from sqlalchemy import Column, Integer, String
-from app.pkg.models import BaseModel
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import mapped_column, Mapped
+
+from app.pkg.models.base import BaseORM
 from app.pkg.models.mixins import TimestampMixin
 
 
 __all__ = [
-    "BlogMessage",
+    "BlogModel",
 ]
 
 
-class BlogMessage(TimestampMixin, BaseModel):
+class BlogModel(BaseORM, TimestampMixin):
     __tablename__ = "blog_message"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    title = Column(String, nullable=False)
-    content = Column(String, nullable=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    title: Mapped[str] = mapped_column(String, nullable=False)
+    content: Mapped[str] = mapped_column(String, nullable=False)
 
     def __repr__(self):
         return (

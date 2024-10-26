@@ -1,5 +1,7 @@
-from sqlalchemy import Column, DateTime
+from sqlalchemy import DateTime
 from datetime import datetime, UTC
+
+from sqlalchemy.orm import mapped_column, Mapped
 
 __all__ = [
     "TimestampMixin",
@@ -7,7 +9,12 @@ __all__ = [
 
 
 class TimestampMixin:
-    created_at = Column(DateTime, default=datetime.now(UTC), nullable=False)
-    updated_at = Column(
-        DateTime, default=datetime.now(UTC), onupdate=datetime.now(UTC), nullable=False
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.now(UTC), nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.now(UTC),
+        onupdate=datetime.now(UTC),
+        nullable=False,
     )
