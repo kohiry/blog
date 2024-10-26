@@ -1,7 +1,7 @@
 from app.pkg.models.base import BaseORM
-from app.pkg.models.models import BlogModel
+from app.pkg.models.models import PostsModel
 
 __all__ = [
     "BaseORM",
-    "BlogModel",
+    "PostsModel",
 ]

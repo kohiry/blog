@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from app.config import settings
-from app.pkg.models import BaseORM, BlogModel
+from app.pkg.models import BaseORM, PostsModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

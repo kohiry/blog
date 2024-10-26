@@ -2,39 +2,39 @@ from datetime import datetime
 from pydantic import BaseModel
 
 __all__ = [
-    "BlogSchema",
-    "CreateBlogSchema",
-    "UpdateBlogSchema",
-    "BaseBlogSchema",
-    "GetBlogByIDSchema",
-    "DeleteBlogByIDSchema",
+    "PostsSchema",
+    "CreatePostsSchema",
+    "UpdatePostsSchema",
+    "BasePostsSchema",
+    "GetPostsByIDSchema",
+    "DeletePostsByIDSchema",
 ]
 
 
 # Base schema for shared properties, if any are added in the future
-class BaseBlogSchema(BaseModel):
+class BasePostsSchema(BaseModel):
     pass
 
 
-class GetBlogByIDSchema(BaseBlogSchema):
+class GetPostsByIDSchema(BasePostsSchema):
     id: int  # Assuming `id` is an integer in the model
 
 
-class CreateBlogSchema(GetBlogByIDSchema):
+class CreatePostsSchema(GetPostsByIDSchema):
     title: str
     content: str
 
 
-class UpdateBlogSchema(GetBlogByIDSchema):
+class UpdatePostsSchema(GetPostsByIDSchema):
     title: str
     content: str
 
 
-class DeleteBlogByIDSchema(GetBlogByIDSchema):
+class DeletePostsByIDSchema(GetPostsByIDSchema):
     pass
 
 
-class BlogSchema(GetBlogByIDSchema):
+class PostsSchema(GetPostsByIDSchema):
     title: str
     content: str
     created_at: datetime

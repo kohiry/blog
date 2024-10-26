@@ -1,16 +1,16 @@
 from app.pkg.schema.blog import (
-    BlogSchema,
-    CreateBlogSchema,
-    UpdateBlogSchema,
-    GetBlogByIDSchema,
-    DeleteBlogByIDSchema,
+    PostsSchema,
+    CreatePostsSchema,
+    UpdatePostsSchema,
+    GetPostsByIDSchema,
+    DeletePostsByIDSchema,
 )
 
 __all__ = [
-    # Blog Schemas
-    "BlogSchema",
-    "CreateBlogSchema",
-    "UpdateBlogSchema",
-    "GetBlogByIDSchema",
-    "DeleteBlogByIDSchema",
+    # Posts Schemas
+    "PostsSchema",
+    "CreatePostsSchema",
+    "UpdatePostsSchema",
+    "GetPostsByIDSchema",
+    "DeletePostsByIDSchema",
 ]

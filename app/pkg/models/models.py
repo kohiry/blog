@@ -6,11 +6,11 @@ from app.pkg.models.mixins import TimestampMixin
 
 
 __all__ = [
-    "BlogModel",
+    "PostsModel",
 ]
 
 
-class BlogModel(BaseORM, TimestampMixin):
+class PostsModel(BaseORM, TimestampMixin):
     __tablename__ = "blog_message"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
