@@ -1,41 +1,52 @@
 from datetime import datetime
-from pydantic import BaseModel
+from typing import Annotated
+from fastapi import Path, Query
+from app.pkg.common import BaseSchema
+
 
 __all__ = [
-    "BlogSchema",
-    "CreateBlogSchema",
-    "UpdateBlogSchema",
-    "BaseBlogSchema",
-    "GetBlogByIDSchema",
-    "DeleteBlogByIDSchema",
+    "PostsSchema",
+    "CreatePostsSchema",
+    "UpdatePostsSchema",
+    "BasePostsSchema",
+    "GetPostsByIDSchema",
+    "DeletePostsByIDSchema",
 ]
 
 
 # Base schema for shared properties, if any are added in the future
-class BaseBlogSchema(BaseModel):
+class BasePostsSchema(BaseSchema):
     pass
 
 
-class GetBlogByIDSchema(BaseBlogSchema):
-    id: int  # Assuming `id` is an integer in the model
+class GetPostsByIDSchema(BasePostsSchema):
+    id: Annotated[int, Path()]
 
 
-class CreateBlogSchema(GetBlogByIDSchema):
+class CreatePostsSchema(BasePostsSchema):
     title: str
     content: str
 
 
-class UpdateBlogSchema(GetBlogByIDSchema):
-    title: str
-    content: str
-
-
-class DeleteBlogByIDSchema(GetBlogByIDSchema):
+class UpdatePostsSchema(GetPostsByIDSchema, CreatePostsSchema):
     pass
 
 
-class BlogSchema(GetBlogByIDSchema):
+class DeletePostsByIDSchema(GetPostsByIDSchema):
+    pass
+
+
+class PostsSchema(GetPostsByIDSchema):
     title: str
     content: str
     created_at: datetime
     updated_at: datetime
+
+
+class GetPostsPagination(BasePostsSchema):
+    page: Annotated[int, Query()]
+    page_size: Annotated[int, Query()]
+
+
+class GetPosts(BasePostsSchema):
+    posts: list[PostsSchema]

@@ -1,5 +1,5 @@
-from app.pkg.repository.blog import BlogRepository
+from app.pkg.repository.blog import PostsRepository
 
 __all__ = [
-    "BlogRepository",
+    "PostsRepository",
 ]

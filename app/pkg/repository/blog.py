@@ -1,90 +1,120 @@
-from fastapi import Depends
-
 from app.config import get_logger
 from app.pkg.common import BaseRepository
-from app.pkg.models import BlogModel
+from app.pkg.models import PostsModel
 from app.pkg.schema import (
-    GetBlogByIDSchema,
-    BlogSchema,
-    CreateBlogSchema,
-    DeleteBlogByIDSchema,
-    UpdateBlogSchema,
+    GetPostsByIDSchema,
+    PostsSchema,
+    CreatePostsSchema,
+    DeletePostsByIDSchema,
+    UpdatePostsSchema,
 )
-from app.pkg.session import get_async_session
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import delete, update
 
+from app.pkg.schema.blog import GetPostsPagination, GetPosts
+
 logger = get_logger()
 
 __all__ = [
-    "BlogRepository",
+    "PostsRepository",
 ]
 
 
-class BlogRepository(BaseRepository):
+class PostsRepository(BaseRepository):
     async def _check_exist_by_id(
         self,
-        query: GetBlogByIDSchema,
+        query: GetPostsByIDSchema,
         session: AsyncSession,
-    ) -> BlogModel | None:
+    ) -> PostsModel | None:
         result = await session.execute(
-            select(BlogModel).where(BlogModel.id == query.id)
+            select(PostsModel).where(PostsModel.id == query.id)
         )
-        blog_message = await result.scalar_one_or_none()
+        blog_message = result.scalar_one_or_none()
         if blog_message is None:
             return None
         return blog_message
 
+    async def _check_exist_by_title_content_index(
+        self,
+        query: CreatePostsSchema,
+        session: AsyncSession,
+    ) -> PostsModel | None:
+        result = await session.execute(
+            select(PostsModel).where(
+                (PostsModel.title == query.title)
+                & (PostsModel.content == query.content)
+            )
+        )
+        blog_message = result.scalar_one_or_none()
+        if blog_message is None:
+            return None
+        return blog_message
+
+    async def get_posts(
+        self,
+        query: GetPostsPagination,
+        session: AsyncSession,
+    ) -> GetPosts | None:
+        offset_value = (query.page - 1) * query.page_size
+
+        result = await session.execute(
+            select(PostsModel).offset(offset_value).limit(query.page_size)
+        )
+        posts = result.scalars().all()
+        if posts is None:
+            return None
+        return GetPosts(posts=list(map(lambda x: PostsSchema.model_validate(x), posts)))
+
     async def get_by_id(
         self,
-        query: GetBlogByIDSchema,
-        session: AsyncSession = Depends(get_async_session),
-    ) -> BlogSchema | None:
+        query: GetPostsByIDSchema,
+        session: AsyncSession,
+    ) -> PostsSchema | None:
         blog_message = await self._check_exist_by_id(query, session)
         if blog_message is None:
             return None
-        return BlogSchema.model_validate(blog_message)
+        return PostsSchema.model_validate(blog_message)
 
     async def create(
         self,
-        cmd: CreateBlogSchema,
-        session: AsyncSession = Depends(get_async_session),
-    ) -> BlogSchema | None:
-        blog_message = await self._check_exist_by_id(cmd, session)
+        cmd: CreatePostsSchema,
+        session: AsyncSession,
+    ) -> PostsSchema | None:
+        blog_message = await self._check_exist_by_title_content_index(cmd, session)
         if blog_message is not None:
             return None
-        model = BlogModel()
+        model = PostsModel(**cmd.model_dump())
         session.add(model)
         await session.commit()
-        return BlogSchema.model_validate(model)
+        return PostsSchema.model_validate(model)
 
     async def delete_by_id(
         self,
-        cmd: DeleteBlogByIDSchema,
-        session: AsyncSession = Depends(get_async_session),
-    ) -> DeleteBlogByIDSchema | None:
+        cmd: DeletePostsByIDSchema,
+        session: AsyncSession,
+    ) -> DeletePostsByIDSchema | None:
         result_check = await self._check_exist_by_id(cmd, session)
         if result_check is None:
             return None
-        result = delete(BlogModel).where(BlogModel.id == cmd.id)
+        result = delete(PostsModel).where(PostsModel.id == cmd.id)
         await session.execute(result)
         await session.commit()
         return cmd
 
     async def update_by_id(
         self,
-        cmd: UpdateBlogSchema,
-        session: AsyncSession = Depends(get_async_session),
-    ) -> BlogSchema | None:
+        cmd: UpdatePostsSchema,
+        session: AsyncSession,
+    ) -> GetPostsByIDSchema | None:
         result_check = await self._check_exist_by_id(cmd, session)
         if result_check is None:
             return None
         stmt = (
-            update(BlogModel)
-            .where(BlogModel.id == cmd.id)
+            update(PostsModel)
+            .where(PostsModel.id == cmd.id)
             .values(title=cmd.title, content=cmd.content)
         )
         await session.execute(stmt)
         await session.commit()
-        return BlogSchema.model_validate(cmd)
+        return GetPostsByIDSchema.model_validate(cmd)
