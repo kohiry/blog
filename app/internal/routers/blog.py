@@ -21,7 +21,6 @@ __all__ = [
 ]
 
 logger = get_logger()
-# TODO ошибка с create, не проверяет по имени, и в модели чтото не так с миксином
 
 
 class PostsRouter(BaseRouter):  # , metaclass=StaticMeta):
