@@ -17,7 +17,7 @@ class BaseRepository(metaclass=ABCMeta):
 
     @abstractmethod
     async def get_by_id(
-        self, query: BaseSchema, session: AsyncSession = Any
+        self, query: BaseSchema, session: AsyncSession
     ) -> BaseSchema | None:
         """Abstract method for getting by name."""
         pass
@@ -34,21 +34,25 @@ class BaseRepository(metaclass=ABCMeta):
     async def create(
         self,
         cmd: BaseSchema,
-        session: AsyncSession = Any,
+        session: AsyncSession,
     ) -> BaseSchema | None:
         """Abstract method for create entity."""
         pass
 
     @abstractmethod
     async def delete_by_id(
-        self, cmd: BaseSchema, session: AsyncSession = Any
+        self,
+        cmd: BaseSchema,
+        session: AsyncSession,
     ) -> BaseSchema | None:
         """Abstract method for delete entity."""
         pass
 
     @abstractmethod
     async def update_by_id(
-        self, cmd: BaseSchema, session: AsyncSession = Any
+        self,
+        cmd: BaseSchema,
+        session: AsyncSession,
     ) -> BaseSchema | None:
         """Abstract method for update entity."""
         pass

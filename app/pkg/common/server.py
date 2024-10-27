@@ -18,7 +18,7 @@ class BaseServer(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def __add_middleware(self):
+    def _add_cors(self):
         """The abstract method adding middleware."""
         pass
 

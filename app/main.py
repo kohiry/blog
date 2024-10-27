@@ -3,10 +3,7 @@ from app import FastAPIServer
 
 
 async def main():
-    servers = [
-        FastAPIServer(),
-    ]
-    await asyncio.gather(*map(lambda server: server.run(), servers))
+    await FastAPIServer().run()
 
 
 if __name__ == "__main__":

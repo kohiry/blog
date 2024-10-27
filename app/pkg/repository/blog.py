@@ -1,5 +1,3 @@
-from fastapi import Depends
-
 from app.config import get_logger
 from app.pkg.common import BaseRepository
 from app.pkg.models import PostsModel
@@ -10,10 +8,11 @@ from app.pkg.schema import (
     DeletePostsByIDSchema,
     UpdatePostsSchema,
 )
-from app.pkg.session import get_async_session
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import delete, update
+
+from app.pkg.schema.blog import GetPostsPagination, GetPosts
 
 logger = get_logger()
 
@@ -31,15 +30,46 @@ class PostsRepository(BaseRepository):
         result = await session.execute(
             select(PostsModel).where(PostsModel.id == query.id)
         )
-        blog_message = await result.scalar_one_or_none()
+        blog_message = result.scalar_one_or_none()
         if blog_message is None:
             return None
         return blog_message
 
+    async def _check_exist_by_title_content_index(
+        self,
+        query: CreatePostsSchema,
+        session: AsyncSession,
+    ) -> PostsModel | None:
+        result = await session.execute(
+            select(PostsModel).where(
+                (PostsModel.title == query.title)
+                & (PostsModel.content == query.content)
+            )
+        )
+        blog_message = result.scalar_one_or_none()
+        if blog_message is None:
+            return None
+        return blog_message
+
+    async def get_posts(
+        self,
+        query: GetPostsPagination,
+        session: AsyncSession,
+    ) -> GetPosts | None:
+        offset_value = (query.page - 1) * query.page_size
+
+        result = await session.execute(
+            select(PostsModel).offset(offset_value).limit(query.page_size)
+        )
+        posts = result.scalars().all()
+        if posts is None:
+            return None
+        return GetPosts(posts=list(map(lambda x: PostsSchema.model_validate(x), posts)))
+
     async def get_by_id(
         self,
         query: GetPostsByIDSchema,
-        session: AsyncSession = Depends(get_async_session),
+        session: AsyncSession,
     ) -> PostsSchema | None:
         blog_message = await self._check_exist_by_id(query, session)
         if blog_message is None:
@@ -49,12 +79,12 @@ class PostsRepository(BaseRepository):
     async def create(
         self,
         cmd: CreatePostsSchema,
-        session: AsyncSession = Depends(get_async_session),
+        session: AsyncSession,
     ) -> PostsSchema | None:
-        blog_message = await self._check_exist_by_id(cmd, session)
+        blog_message = await self._check_exist_by_title_content_index(cmd, session)
         if blog_message is not None:
             return None
-        model = PostsModel()
+        model = PostsModel(**cmd.model_dump())
         session.add(model)
         await session.commit()
         return PostsSchema.model_validate(model)
@@ -62,7 +92,7 @@ class PostsRepository(BaseRepository):
     async def delete_by_id(
         self,
         cmd: DeletePostsByIDSchema,
-        session: AsyncSession = Depends(get_async_session),
+        session: AsyncSession,
     ) -> DeletePostsByIDSchema | None:
         result_check = await self._check_exist_by_id(cmd, session)
         if result_check is None:
@@ -75,8 +105,8 @@ class PostsRepository(BaseRepository):
     async def update_by_id(
         self,
         cmd: UpdatePostsSchema,
-        session: AsyncSession = Depends(get_async_session),
-    ) -> PostsSchema | None:
+        session: AsyncSession,
+    ) -> GetPostsByIDSchema | None:
         result_check = await self._check_exist_by_id(cmd, session)
         if result_check is None:
             return None
@@ -87,4 +117,4 @@ class PostsRepository(BaseRepository):
         )
         await session.execute(stmt)
         await session.commit()
-        return PostsSchema.model_validate(cmd)
+        return GetPostsByIDSchema.model_validate(cmd)

@@ -1,5 +1,8 @@
 from datetime import datetime
-from pydantic import BaseModel
+from typing import Annotated
+from fastapi import Path, Query
+from app.pkg.common import BaseSchema
+
 
 __all__ = [
     "PostsSchema",
@@ -12,22 +15,21 @@ __all__ = [
 
 
 # Base schema for shared properties, if any are added in the future
-class BasePostsSchema(BaseModel):
+class BasePostsSchema(BaseSchema):
     pass
 
 
 class GetPostsByIDSchema(BasePostsSchema):
-    id: int  # Assuming `id` is an integer in the model
+    id: Annotated[int, Path()]
 
 
-class CreatePostsSchema(GetPostsByIDSchema):
+class CreatePostsSchema(BasePostsSchema):
     title: str
     content: str
 
 
-class UpdatePostsSchema(GetPostsByIDSchema):
-    title: str
-    content: str
+class UpdatePostsSchema(GetPostsByIDSchema, CreatePostsSchema):
+    pass
 
 
 class DeletePostsByIDSchema(GetPostsByIDSchema):
@@ -39,3 +41,12 @@ class PostsSchema(GetPostsByIDSchema):
     content: str
     created_at: datetime
     updated_at: datetime
+
+
+class GetPostsPagination(BasePostsSchema):
+    page: Annotated[int, Query()]
+    page_size: Annotated[int, Query()]
+
+
+class GetPosts(BasePostsSchema):
+    posts: list[PostsSchema]

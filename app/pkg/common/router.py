@@ -12,19 +12,19 @@ class BaseRouter(metaclass=ABCMeta):
     repository: BaseRepository
 
     @abstractmethod
-    async def get(self, query: BaseSchema, request: Any | None = None):
+    async def get(self, query: BaseSchema, *args, **kwargs):
         pass
 
     @abstractmethod
-    async def post(self, query: BaseSchema, request: Any | None = None):
+    async def post(self, query: BaseSchema, *args, **kwargs):
         pass
 
     @abstractmethod
-    async def delete(self, query: BaseSchema, request: Any | None = None):
+    async def delete(self, query: BaseSchema, *args, **kwargs):
         pass
 
     @abstractmethod
-    async def put(self, query: BaseSchema, request: Any | None = None):
+    async def put(self, query: BaseSchema, *args, **kwargs):
         pass
 
     @staticmethod
