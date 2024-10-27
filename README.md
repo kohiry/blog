@@ -26,4 +26,4 @@ List of abstraction, for writing like SOLID.
 
 ### Why I don't create prod.yml and tests?
 
-This is simple project and I don't want waste more time.
+This is simple project :^)))
