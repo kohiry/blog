@@ -30,3 +30,52 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+
+  postgres-airflow:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+
+  airflow-init:
+    image: apache/airflow:2.6.0
+    environment:
+      AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
+      AIRFLOW__CORE__LOAD_EXAMPLES: ${AIRFLOW_CORE_LOAD_EX}
+    volumes:
+      - ${AIRFLOW_CORE_PATH}/dags:/opt/airflow/dags
+      - ${AIRFLOW_CORE_PATH}/logs:/opt/airflow/logs
+      - ${AIRFLOW_CORE_PATH}/plugins:/opt/airflow/plugins
+    entrypoint: sh -c 'airflow db init'
+
+  airflow-webserver:
+    image: apache/airflow:2.6.0
+    environment:
+      AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - airflow-init
+    volumes:
+      - ${AIRFLOW_CORE_PATH}/dags:/opt/airflow/dags
+      - ${AIRFLOW_CORE_PATH}/logs:/opt/airflow/logs
+      - ${AIRFLOW_CORE_PATH}/plugins:/opt/airflow/plugins
+    command: "airflow webserver"
+
+  airflow-scheduler:
+    image: apache/airflow:2.6.0
+    environment:
+      AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
+    depends_on:
+      - postgres
+      - airflow-init
+    volumes:
+      - ${AIRFLOW_CORE_PATH}/dags:/opt/airflow/dags
+      - ${AIRFLOW_CORE_PATH}/logs:/opt/airflow/logs
+      - ${AIRFLOW_CORE_PATH}/plugins:/opt/airflow/plugins
+    command: "airflow scheduler"
