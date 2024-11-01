@@ -535,6 +535,27 @@ files = [
 apache-airflow = ">=2.8.0"
 
 [[package]]
+name = "apache-airflow-providers-postgres"
+version = "5.13.1"
+description = "Provider package apache-airflow-providers-postgres for Apache Airflow"
+optional = false
+python-versions = "~=3.9"
+files = [
+    {file = "apache_airflow_providers_postgres-5.13.1-py3-none-any.whl", hash = "sha256:728e7003e19614f12ef217693e9aabe6e820c84d8f0c4a58f3fd5f737100f56f"},
+    {file = "apache_airflow_providers_postgres-5.13.1.tar.gz", hash = "sha256:fc8dfd532554aff5da7a1e0c7ac90f4c3d4a64522fac2f2c971ca2f715a85b72"},
+]
+
+[package.dependencies]
+apache-airflow = ">=2.8.0"
+apache-airflow-providers-common-sql = ">=1.17.0"
+psycopg2-binary = ">=2.9.4"
+
+[package.extras]
+amazon = ["apache-airflow-providers-amazon (>=2.6.0)"]
+common-sql = ["apache-airflow-providers-common-sql"]
+openlineage = ["apache-airflow-providers-openlineage"]
+
+[[package]]
 name = "apache-airflow-providers-smtp"
 version = "1.8.0"
 description = "Provider package apache-airflow-providers-smtp for Apache Airflow"
@@ -2693,6 +2714,17 @@ tzdata = ">=2020.1"
 test = ["time-machine (>=2.6.0)"]
 
 [[package]]
+name = "pep517"
+version = "0.13.1"
+description = "Wrappers to build Python packages using PEP 517 hooks"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "pep517-0.13.1-py3-none-any.whl", hash = "sha256:31b206f67165b3536dd577c5c3f1518e8fbaf38cbc57efff8369a392feff1721"},
+    {file = "pep517-0.13.1.tar.gz", hash = "sha256:1b2fa2ffd3938bb4beffe5d6146cbcb2bda996a5a4da9f31abffd8b24e07b317"},
+]
+
+[[package]]
 name = "pluggy"
 version = "1.5.0"
 description = "plugin and hook calling mechanisms for python"
@@ -4198,4 +4230,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.12,<3.13"
-content-hash = "e01fa3650dc754e3a2dedc6e37e1ce6eeead10b90e434902245cbe2a6fded5bf"
+content-hash = "30cc484467d413efef6650d070073619f245842a6f43b88beab8166d6de2ba5d"
