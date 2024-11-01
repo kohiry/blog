@@ -1,8 +1,9 @@
 FROM python:3.12-slim
 
 RUN apt-get update && \
-    apt-get install -y g++ libffi-dev abseil-cpp && \
+    apt-get install -y g++ libffi-dev && \
     apt-get clean
+
 
 WORKDIR /api
 
@@ -13,4 +14,3 @@ RUN pip install poetry && \
     poetry install --no-interaction --no-ansi
 
 COPY . .
-

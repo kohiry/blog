@@ -7,7 +7,7 @@ COPY alembic.ini ./
 
 RUN pip install poetry && \
     poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi
+    poetry install --no-interaction --no-ansi alembic psycopg2-binary sqlalchemy
 
 COPY app/pkg/models/ /migrations/app/pkg/models/
 COPY app/config/ /migrations/app/config/
