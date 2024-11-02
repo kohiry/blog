@@ -52,9 +52,12 @@ services:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
       AIRFLOW__CORE__LOAD_EXAMPLES: ${AIRFLOW_CORE_LOAD_EX}
+    depends_on:
+      - postgres-airflow
     volumes:
       - ${AIRFLOW_CORE_PATH}/dags:/opt/airflow/dags
     entrypoint: sh -c 'airflow db init'
+    restart: on-failure
     networks:
       - airflow-network
 
@@ -66,7 +69,7 @@ services:
     ports:
       - "${AIRFLOW_DB_PORTS}:8080"
     depends_on:
-      - postgres
+      - postgres-airflow
       - airflow-init
     volumes:
       - ${AIRFLOW_CORE_PATH}/dags:/opt/airflow/dags
@@ -80,7 +83,7 @@ services:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
     depends_on:
-      - postgres
+      - postgres-airflow
       - airflow-init
     volumes:
       - ${AIRFLOW_CORE_PATH}/dags:/opt/airflow/dags
