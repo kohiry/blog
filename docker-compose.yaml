@@ -46,8 +46,6 @@ services:
       AIRFLOW__CORE__LOAD_EXAMPLES: ${AIRFLOW_CORE_LOAD_EX}
     volumes:
       - ${AIRFLOW_CORE_PATH}/dags:/opt/airflow/dags
-      - ${AIRFLOW_CORE_PATH}/logs:/opt/airflow/logs
-      - ${AIRFLOW_CORE_PATH}/plugins:/opt/airflow/plugins
     entrypoint: sh -c 'airflow db init'
 
   airflow-webserver:
@@ -62,8 +60,6 @@ services:
       - airflow-init
     volumes:
       - ${AIRFLOW_CORE_PATH}/dags:/opt/airflow/dags
-      - ${AIRFLOW_CORE_PATH}/logs:/opt/airflow/logs
-      - ${AIRFLOW_CORE_PATH}/plugins:/opt/airflow/plugins
     command: "airflow webserver"
 
   airflow-scheduler:
@@ -76,6 +72,4 @@ services:
       - airflow-init
     volumes:
       - ${AIRFLOW_CORE_PATH}/dags:/opt/airflow/dags
-      - ${AIRFLOW_CORE_PATH}/logs:/opt/airflow/logs
-      - ${AIRFLOW_CORE_PATH}/plugins:/opt/airflow/plugins
     command: "airflow scheduler"
