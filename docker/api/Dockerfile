@@ -7,10 +7,11 @@ RUN apt-get update && \
 
 WORKDIR /api
 
-COPY poetry/ ./
+COPY poetry/api/ ./
 
 RUN pip install poetry && \
     poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi --only api
+    poetry install --no-interaction --no-ansi
 
-COPY . .
+COPY ./app ./app
+COPY ./.env ./

@@ -4,7 +4,7 @@ services:
       dockerfile: docker/api/Dockerfile
       context: .
     volumes:
-      - .:/api
+      - ./app/:/api/app/
     depends_on:
       - postgres
     command: sh -c "python3 -B -m app.main"
