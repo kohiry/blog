@@ -37,6 +37,8 @@ services:
       POSTGRES_USER: ${AIRFLOW_DB_USERNAME}
       POSTGRES_PASSWORD: ${AIRFLOW_DB_PASS}
       POSTGRES_DB: ${AIRFLOW_DB_NAME}
+    networks:
+      - airflow-network
 
   airflow-init:
     image: apache/airflow:latest
@@ -47,6 +49,8 @@ services:
     volumes:
       - ${AIRFLOW_CORE_PATH}/dags:/opt/airflow/dags
     entrypoint: sh -c 'airflow db init'
+    networks:
+      - airflow-network
 
   airflow-webserver:
     image: apache/airflow:latest
@@ -61,6 +65,8 @@ services:
     volumes:
       - ${AIRFLOW_CORE_PATH}/dags:/opt/airflow/dags
     command: "airflow webserver"
+    networks:
+      - airflow-network
 
   airflow-scheduler:
     image: apache/airflow:latest
@@ -73,3 +79,8 @@ services:
     volumes:
       - ${AIRFLOW_CORE_PATH}/dags:/opt/airflow/dags
     command: "airflow scheduler"
+    networks:
+      - airflow-network
+
+networks:
+  airflow-network:
