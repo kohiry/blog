@@ -6,6 +6,7 @@ START_DOCK=docker-compose
 MIG=migrations
 DB=postgres
 APP=api
+AIR=airflow-webserver
 POSTGRES=postgres
 
 up:
@@ -16,6 +17,8 @@ upd:
 	$(START_DOCK) down
 api_shell:
 	$(START_DOCK) exec $(APP) sh 
+airflow_shell:
+	$(START_DOCK) exec $(AIR) sh 
 psql:
 	docker-compose exec $(DB) sh -c "psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)"
 gen_migration:
