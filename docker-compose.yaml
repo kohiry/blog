@@ -32,14 +32,13 @@ services:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
 
   postgres-airflow:
-    image: postgres:13
+    image: postgres:14.2
     environment:
-      POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
-      POSTGRES_DB: airflow
-
+      POSTGRES_USER: ${AIRFLOW_DB_USERNAME}
+      POSTGRES_PASSWORD: ${AIRFLOW_DB_PASS}
+      POSTGRES_DB: ${AIRFLOW_DB_NAME}
   airflow-init:
-    image: apache/airflow:2.6.0
+    image: apache/airflow:latest
     environment:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
@@ -51,7 +50,7 @@ services:
     entrypoint: sh -c 'airflow db init'
 
   airflow-webserver:
-    image: apache/airflow:2.6.0
+    image: apache/airflow:latest
     environment:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
@@ -67,7 +66,7 @@ services:
     command: "airflow webserver"
 
   airflow-scheduler:
-    image: apache/airflow:2.6.0
+    image: apache/airflow:latest
     environment:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
