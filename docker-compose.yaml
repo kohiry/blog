@@ -10,6 +10,8 @@ services:
     command: sh -c "python3 -B -m app.main"
     ports:
       - "${API_PORT}:${API_PORT}"
+    networks:
+      - api-network
 
   migrations:
     build:
@@ -21,6 +23,8 @@ services:
       - postgres
     command: sh -c "alembic upgrade head"
     restart: on-failure
+    networks:
+      - api-network
 
   postgres:
     image: postgres:14.2
@@ -30,6 +34,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "${POSTGRES_PORT}:5432"
+    networks:
+      - api-network
 
   postgres-airflow:
     image: postgres:13
@@ -84,3 +90,4 @@ services:
 
 networks:
   airflow-network:
+  api-network:
