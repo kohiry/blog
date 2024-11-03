@@ -1,8 +1,6 @@
-FROM apache/airflow:2.7.2
+FROM ${AIRFLOW_VERSION}
 
 COPY poetry/airflow ./
 
-RUN pip install poetry && \
-    poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi
+RUN pip install -r requirements.txt
 

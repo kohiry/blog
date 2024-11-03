@@ -48,7 +48,7 @@ services:
       - airflow-network
 
   airflow-init:
-    image: apache/airflow:2.7.2
+    image: ${AIRFLOW_VERSION}
     environment:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
@@ -81,7 +81,7 @@ services:
       - airflow-network
 
   airflow-scheduler:
-    image: apache/airflow:2.7.2
+    image: ${AIRFLOW_VERSION}
     environment:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
