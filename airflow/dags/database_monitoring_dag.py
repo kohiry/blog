@@ -11,7 +11,7 @@ TOKEN, CHAT_ID = os.environ['TOKEN'], os.environ['CHAT_ID']
 def transform_data(ti):
     query_result = ti.xcom_pull(task_ids='extract_data')
     query_result.sort()
-    msg = "Most popular posts here with date {{ ds }}: \n" + '\n'.join(
+    msg = "Most popular posts here with date { ds }: \n" + '\n'.join(
         [
             f"title={query[0]} content={query[1]} views={query[2]}"
             for query in query_result
@@ -21,11 +21,12 @@ def transform_data(ti):
 
 
 def send_telegram_message(ti):
-    query_result = ti.xcom_pull(task_ids='transform_data')
+    query_result = ti.xcom_pull(task_ids='transform_data', key='query_result')
     url = (f"https://api.telegram.org/bot{TOKEN}"
            f"/sendMessage?chat_id={CHAT_ID}&text={query_result}")
     requests.get(url)
     return 'end'
+
 
 with DAG(
     dag_id='database_monitoring_dag',
@@ -54,6 +55,7 @@ with DAG(
     transform_data = PythonOperator(
         task_id='transform_data',
         python_callable=transform_data,
+        op_args=['{{ ds }}'],
         trigger_rule='all_done',
     )
 
