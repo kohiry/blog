@@ -15,6 +15,7 @@ services:
 
   migrations:
     build:
+      context: .
       dockerfile: docker/migrations/Dockerfile
     volumes:
       - ./migrations/versions:/migrations/migrations/versions
@@ -62,7 +63,9 @@ services:
       - airflow-network
 
   airflow-webserver:
-    image: apache/airflow:2.7.2
+    build:
+      context: .
+      dockerfile: docker/airflow/Dockerfile
     environment:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
@@ -82,6 +85,7 @@ services:
     environment:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
+      POSTGRES_CONN_LINK: ${POSTGRES_CONN_LINK}
     depends_on:
       - postgres-airflow
       - airflow-init

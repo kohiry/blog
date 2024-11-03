@@ -2,6 +2,8 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from datetime import datetime, timedelta
+from os import environ
+
 
 def check_condition(ti):
     query_result = ti.xcom_pull(task_ids='extract_data')
@@ -10,43 +12,40 @@ def check_condition(ti):
     return 'end'
 
 def send_telegram_message():
-    # Логика для отправки уведомления в Telegram
     pass
 
 with DAG(
     dag_id='database_monitoring_dag',
-    start_date=datetime(2023, 1, 1),
-    schedule_interval=timedelta(minutes=30),  # Запускаем каждые 30 минут
+    start_date=datetime(2024, 11, 3),
+    schedule_interval=timedelta(minutes=1),
     catchup=False,
     default_args={
-        'owner': 'data_team',
+        'owner': 'airflow',
         'retries': 1,
         'retry_delay': timedelta(minutes=5),
+        'email_on_failure': False,
     },
 ) as dag:
 
-    # Шаг 1: Извлечение данных
     extract_data = PostgresOperator(
         task_id='extract_data',
-        postgres_conn_id='your_postgres_connection',  # ID подключения к базе в Airflow
+        postgres_conn_id='postgres',
         sql="""
-            SELECT COUNT(*) 
+            SELECT views
             FROM posts 
+            WHERE views > 100 and update_at >= {{ ds }}
         """,
     )
 
-    # Шаг 2: Проверка условия
     check_condition = PythonOperator(
         task_id='check_condition',
         python_callable=check_condition,
     )
 
-    # Шаг 3: Отправка уведомления
     send_notification = PythonOperator(
         task_id='send_notification',
         python_callable=send_telegram_message,
-        trigger_rule='one_success',  # Выполнится, если хотя бы одна предыдущая задача завершится успехом
+        trigger_rule='one_success',
     )
 
-    # Определяем последовательность выполнения
     extract_data >> check_condition >> [send_notification]
