@@ -54,13 +54,13 @@ with DAG(
     transform_data = PythonOperator(
         task_id='transform_data',
         python_callable=transform_data,
-        trigger_rule='all',
+        trigger_rule='all_success',
     )
 
     send_notification = PythonOperator(
         task_id='send_notification',
         python_callable=send_telegram_message,
-        trigger_rule='all',
+        trigger_rule='all_success',
     )
 
     extract_data >> transform_data >> [send_notification]
