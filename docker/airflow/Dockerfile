@@ -1,3 +1,4 @@
+ARG AIRFLOW_VERSION
 FROM ${AIRFLOW_VERSION}
 
 COPY poetry/airflow ./

@@ -66,6 +66,8 @@ services:
     build:
       context: .
       dockerfile: docker/airflow/Dockerfile
+      args:
+        AIRFLOW_VERSION: ${AIRFLOW_VERSION}
     environment:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_CORE_EXECUTOR}
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: ${AIRFLOW_CORE_SQLALC_CONN}
