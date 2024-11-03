@@ -37,6 +37,7 @@ services:
       - "${POSTGRES_PORT}:5432"
     networks:
       - api-network
+      - airflow-network
 
   postgres-airflow:
     image: postgres:13
