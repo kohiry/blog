@@ -27,3 +27,4 @@ This is my base structure for all projects.
 List of abstraction, for writing like SOLID.
 
 
+

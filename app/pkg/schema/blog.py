@@ -41,6 +41,7 @@ class PostsSchema(GetPostsByIDSchema):
     content: str
     created_at: datetime
     updated_at: datetime
+    views: int
 
 
 class GetPostsPagination(BasePostsSchema):

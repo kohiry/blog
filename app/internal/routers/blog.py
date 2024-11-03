@@ -21,7 +21,6 @@ __all__ = [
 ]
 
 logger = get_logger()
-# TODO ошибка с create, не проверяет по имени, и в модели чтото не так с миксином
 
 
 class PostsRouter(BaseRouter):  # , metaclass=StaticMeta):
@@ -51,7 +50,7 @@ class PostsRouter(BaseRouter):  # , metaclass=StaticMeta):
         if result is None:
             logger.error(f"404, post not found with id {query.id}")
             raise HTTPException(status_code=404, detail="Post not Found!")
-        logger.info(f"Find post with id {query.id}!!")
+        logger.info(f"Find post with id {result.id} with views {result.views}!!")
         return result
 
     @staticmethod

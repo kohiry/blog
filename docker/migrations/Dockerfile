@@ -1,8 +1,8 @@
-FROM python:3.12-alpine
+FROM python:3.12-slim
 
 WORKDIR /migrations
 
-COPY poetry/ ./
+COPY poetry/migrations ./
 COPY alembic.ini ./
 
 RUN pip install poetry && \
