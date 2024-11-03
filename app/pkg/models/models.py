@@ -18,6 +18,7 @@ class PostsModel(BaseORM, TimestampMixin):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String, nullable=False)
     content: Mapped[str] = mapped_column(String, nullable=False)
+    views: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
     def __repr__(self):
         return (
