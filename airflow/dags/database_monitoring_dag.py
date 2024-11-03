@@ -2,17 +2,12 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from datetime import datetime, timedelta
-from os import environ
 
 
-def check_condition(ti):
+def send_telegram_message(ti):
     query_result = ti.xcom_pull(task_ids='extract_data')
-    if query_result and query_result[0] > 100:
-        return 'send_notification'
+    print(query_result)
     return 'end'
-
-def send_telegram_message():
-    pass
 
 with DAG(
     dag_id='database_monitoring_dag',
@@ -33,13 +28,8 @@ with DAG(
         sql="""
             SELECT views
             FROM posts 
-            WHERE views > 100 and update_at >= {{ ds }}
+            WHERE views > 1 and update_at >= {{ ds }}
         """,
-    )
-
-    check_condition = PythonOperator(
-        task_id='check_condition',
-        python_callable=check_condition,
     )
 
     send_notification = PythonOperator(
@@ -48,4 +38,4 @@ with DAG(
         trigger_rule='one_success',
     )
 
-    extract_data >> check_condition >> [send_notification]
+    extract_data >> [send_notification]
