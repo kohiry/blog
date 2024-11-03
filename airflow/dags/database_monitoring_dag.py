@@ -30,6 +30,7 @@ with DAG(
             FROM posts 
             WHERE views > 1 and update_at >= {{ ds }}
         """,
+        do_xcom_push=True,
     )
 
     send_notification = PythonOperator(
