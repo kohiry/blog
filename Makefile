@@ -3,7 +3,10 @@ export $(shell sed -E '/^\s*#/d;/^\s*$$/d;s/=.*//' .env)
 
 msg?=new migration
 START_DOCK=docker-compose
-APP=migrations
+MIG=migrations
+DB=postgres
+APP=api
+AIR=airflow-webserver
 POSTGRES=postgres
 
 up:
@@ -12,8 +15,12 @@ upb:
 	$(START_DOCK) up --build
 upd:
 	$(START_DOCK) down
+api_shell:
+	$(START_DOCK) exec $(APP) sh 
+airflow_shell:
+	$(START_DOCK) exec $(AIR) sh 
 psql:
-	docker-compose exec postgres sh -c "psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)"
+	docker-compose exec $(DB) sh -c "psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)"
 gen_migration:
-	$(START_DOCK) run $(APP) sh -c "alembic revision --autogenerate -m '$(msg)'"
-	$(START_DOCK) stop $(APP)
+	$(START_DOCK) run $(MIG) sh -c "alembic revision --autogenerate -m '$(msg)'"
+	$(START_DOCK) stop $(MIG)
