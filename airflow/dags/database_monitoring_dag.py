@@ -28,7 +28,7 @@ with DAG(
         sql="""
             SELECT views
             FROM posts 
-            WHERE views > 1 and update_at >= {{ ds }}
+            WHERE views > 1 and updated_at >= {{ ds }}
         """,
         do_xcom_push=True,
     )
