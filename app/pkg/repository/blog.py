@@ -35,8 +35,8 @@ class PostsRepository(BaseRepository):
             return None
         return blog_message
 
+    @staticmethod
     async def _check_exist_by_title_content_index(
-        self,
         query: CreatePostsSchema,
         session: AsyncSession,
     ) -> PostsModel | None:
@@ -51,8 +51,18 @@ class PostsRepository(BaseRepository):
             return None
         return blog_message
 
+    @staticmethod
+    async def _upd_views(model: PostsModel, session: AsyncSession):
+        stmt = (
+            update(PostsModel)
+            .where(PostsModel.id == model.id)
+            .values(views=model.views + 1)
+        )
+        await session.execute(stmt)
+        await session.commit()
+
+    @staticmethod
     async def get_posts(
-        self,
         query: GetPostsPagination,
         session: AsyncSession,
     ) -> GetPosts | None:
@@ -74,6 +84,7 @@ class PostsRepository(BaseRepository):
         blog_message = await self._check_exist_by_id(query, session)
         if blog_message is None:
             return None
+        await self._upd_views(blog_message, session)
         return PostsSchema.model_validate(blog_message)
 
     async def create(

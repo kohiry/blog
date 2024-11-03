@@ -1,0 +1,3 @@
+apache-airflow-providers-common-sql
+psycopg2-binary
+apache-airflow-providers-postgres

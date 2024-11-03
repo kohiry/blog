@@ -12,8 +12,9 @@ The simple CRUD for blog.
 
 ### How to set up?
 1) Change .env.example to .env
-2) First method is `make up`
-3) Second method is `docker-compose up`
+2) Change bot_token and chat_id
+3) First method is `make up`
+4) Second method is `docker-compose up`
 
 ### What this app do?
 
@@ -23,7 +24,3 @@ The simple CRUD for blog.
 
 This is my base structure for all projects. 
 List of abstraction, for writing like SOLID.
-
-### Why I don't create prod.yml and tests?
-
-This is simple project :^)))
