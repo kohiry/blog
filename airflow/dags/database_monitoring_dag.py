@@ -11,7 +11,7 @@ TOKEN, CHAT_ID = os.environ['TOKEN'], os.environ['CHAT_ID']
 def transform_data(ti):
     query_result = ti.xcom_pull(task_ids='extract_data')
     query_result.sort()
-    msg = "Most popular posts here with date { ds }: \n" + '\n'.join(
+    msg = "Most popular posts here: \n" + '\n'.join(
         [
             f"title={query[0]} content={query[1]} views={query[2]}"
             for query in query_result
@@ -55,14 +55,11 @@ with DAG(
     transform_data = PythonOperator(
         task_id='transform_data',
         python_callable=transform_data,
-        op_args=['{{ ds }}'],
-        trigger_rule='all_done',
     )
 
     send_notification = PythonOperator(
         task_id='send_notification',
         python_callable=send_telegram_message,
-        trigger_rule='all_done',
     )
 
     extract_data >> transform_data >> [send_notification]
